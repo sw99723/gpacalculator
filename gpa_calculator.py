@@ -31,16 +31,18 @@ def input_grades():
 
     taken_courses = {}
 
-    course_info = st.text_area("Course Information")
+    courses = st.text_area("Enter your courses and scores (e.g., MAT135H5: 73, MAT136H5: 76)")
+    courses = courses.strip()
+    course_list = courses.split(',')
 
-    if course_info:
-        course_list = course_info.strip().split('\n')
+    if courses:
+        course_list = courses.strip().split('\n')
 
         for course in course_list:
-            course_info = course.split(':')
-            if len(course_info) == 2:  # Check if the course info is correctly formatted
-                course_name = course_info[0].strip()
-                score = course_info[1].strip()
+            courses = course.split(':')
+            if len(courses) == 2:  # Check if the course info is correctly formatted
+                course_name = courses[0].strip()
+                score = courses[1].strip()
                 taken_courses[course_name] = int(score)
 
     return taken_courses
@@ -146,10 +148,6 @@ def remaining_cr(courses: dict):
 def main():
     st.title("GPA Calculator")
     st.write("Welcome to the GPA calculator!")
-
-    courses = st.text_area("Enter your courses and scores (e.g., MAT135H5: 73, MAT136H5: 76)")
-    courses = courses.strip()
-    course_list = courses.split(',')
     
     taken_courses = input_grades()
     
