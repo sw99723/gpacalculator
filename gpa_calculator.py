@@ -16,7 +16,7 @@ grade_scheme = {"A+": {"Grade Point": 4.0, "Percentage": (90, 100)},
                 "F": {"Grade Point": 0.0, "Percentage": (0, 49)}}
 
 # taken_courses 예시
-'''                {'ANT102H5': 66, 'MAT102H5': 56, 'ANT101H5': 69, 'CSC108H5': 77,
+'''              {'ANT102H5': 66, 'MAT102H5': 56, 'ANT101H5': 69, 'CSC108H5': 77,
                  'SOC100H5': 53, 'MAT135H5': 73, 'MAT136H5': 76, 'MAT223H5': 68,
                  'MAT232H5': 75, 'STA256H5': 68, 'RLG203H5': 78}'''
 
@@ -145,10 +145,10 @@ def main():
     st.title("GPA Calculator")
     st.write("Welcome to the GPA calculator!")
 
-    '''courses = st.text_area("Enter your courses and scores (e.g., MAT135H5: 73, MAT136H5: 76)")
+    courses = st.text_area("Enter your courses and scores (e.g., MAT135H5: 73, MAT136H5: 76)")
     courses = courses.strip()
     course_list = courses.split(',')
-'''
+    
     taken_courses = input_grades()
     
     if st.button("Calculate GPA"):
