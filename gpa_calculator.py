@@ -36,15 +36,10 @@ def input_grades():
             if len(course_info) == 2:  # Check if the course info is correctly formatted
                 course_name = course_info[0].strip()
                 score = course_info[1].strip()
-                grade = taken_courses[course_name]
-                if type(grade) == int:
+                if type(score, int):
                     taken_courses[course_name] = int(score)
-                else:
-                    if grade == "CR":
-                        taken_courses[course] = -1
-                    elif grade == "NCR":
-                        taken_courses[course] = -2
-
+                elif type(score, str):
+                    taken_courses[course_name] = str(score)
     return taken_courses
 
 def get_grades(courses: dict) -> dict:
@@ -109,18 +104,24 @@ def calculate_remaining_credit(courses: dict) -> (float, float):
     (remaining credit, completed credit)
     """
     completed_credit = 0.0
-    updated_courses = get_grades(courses)
-
-    for course, course_info in updated_courses.items():
+    updated = get_grades(courses)
+    for course in updated:
         if course[6:7] == 'H':
-            if isinstance(course_info[0], int):
-                if course_info[0] >= 50:
+            if isinstance(updated[course][0], int):
+                if updated[course][0] >= 50:
                     completed_credit += 0.5
+            elif updated[course] == 'CR':
+                completed_credit += 0.5
+            elif updated[course] == 'NCR':
+                completed_credit += 0.0
         elif course[6:7] == 'Y':
-            if isinstance(course_info[0], int):
-                if course_info[0] >= 50:
+            if isinstance(updated[course][0], int):
+                if updated[course][0] >= 50:
                     completed_credit += 1.0
-
+            elif updated[course] == 'CR':
+                completed_credit += 1.0
+            elif courses[course] == 'NCR':
+                completed_credit += 0.0
     remaining_credit = 20.0 - completed_credit
 
     return (remaining_credit, completed_credit)
