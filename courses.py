@@ -32,6 +32,31 @@ taken_courses = {'ANT102H5': 66, 'MAT102H5': 56, 'ANT101H5': 69, 'CSC108H5': 77,
                  'SOC100H5': 53, 'MAT135H5': 73, 'MAT136H5': 76, 'MAT223H5': 68, 
                  'MAT232H5': 75, 'STA256H5': 68, 'RLG203H5': 78}
 
+def target_gpa(courses):
+    goal_credit = st.number_input("Input your goal credits (.5 or .0 format): ")
+    goal_gpa = st.number_input("Input your goal GPA: ")
+
+    completed_credit = calculate_remaining_credit(courses)[1]
+    additional_credit = goal_credit - completed_credit
+
+    total_grade_points = get_grades_point_completed_credit(courses)[0]
+
+    if goal_credit % 0.5 != 0:
+        st.write('Invalid credit. It has to be either .5 or .0')
+        return
+    elif goal_credit <= calculate_remaining_credit(courses)[1]:
+        st.write('Less or equal than completed credits')
+        return
+    else:
+        total_credits = completed_credit + additional_credit
+        goal_grade_point = goal_gpa * goal_credit
+        gap = goal_grade_point - total_grade_points
+        st.write(gap)
+
+def main():
+    st.title("Target GPA Calculator")
+    taken_courses = {}  # Update with your course data
+    target_gpa(taken_courses)
 
 def get_grades(courses: dict) -> dict:
     """
@@ -308,8 +333,9 @@ def math_major_complete_condition():
         
    
 
-'''if __name__ == '__main__':
-    print(target_gpa(taken_courses))
+if __name__ == '__main__':
+    main()
+    # print(target_gpa(taken_courses))
     # print(target_gpa(taken_courses))
     
     # print(get_grades(taken_courses))
@@ -319,4 +345,4 @@ def math_major_complete_condition():
     
     # print(remaining_cr(taken_courses))
     
-    # print(math_major_complete_condition())'''
+    # print(math_major_complete_condition())
