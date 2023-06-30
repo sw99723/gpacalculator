@@ -1,19 +1,6 @@
 import streamlit as st
 from queue import Queue
 
-math_major = ['MAT102H5', 'MAT132H5', 'MAT134H5', 'MAT135H5', 'MAT136H5', 'MAT134Y5',
-              'MAT135Y5', 'MAT137Y5', 'MAT157Y5', 'MAT223H5', 'MAT240H5', 'MAT202H5',
-              'MAT244H5', 'MAT232H5', 'MAT233H5', 'MAT257Y5', 'MAT236H5', 'MAT224H5',
-              'MAT247H5', 'MAT301H5', 'MAT334H5', 'MAT354H5', 'MAT337H5', 'MAT378H5',
-              'MAT392H5', 'MAT405H5', 'MAT305H5', 'MAT315H5', 'MAT344H5', 'STA256H5']
-
-stat_major = ['CSC108H5', 'MAT102H5', 'MAT132H5', 'MAT134H5', 'MAT135H5', 'MAT136H5',
-              'MAT134Y5', 'MAT135Y5', 'MAT137Y5', 'MAT157Y5', 'MAT223H5', 'MAT240H5',
-              'MAT232H5', 'MAT233H5', 'MAT257Y5', 'STA256H5', 'STA258H5', 'STA260H5',
-              'STA302H5', 'STA304H5', 'STA305H5', 'CSC322H5', 'CSC311H5', 'CSC411H5',
-              'MAT302H5', 'MAT311H5', 'MAT332H5', 'MAT334H5', 'MAT344H5', 'MAT337H5',
-              'MAT378H5']
-
 grade_scheme = {"A+": {"Grade Point": 4.0, "Percentage": (90, 100)},
                 "A": {"Grade Point": 4.0, "Percentage": (85, 89)},
                 "A-": {"Grade Point": 3.7, "Percentage": (80, 84)},
