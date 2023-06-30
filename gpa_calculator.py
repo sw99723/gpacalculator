@@ -55,6 +55,31 @@ def save_user_data(username, data):
     # Save the user's data to JSON file
     with open(f"{username}_data.json", "w") as file:
         json.dump(data, file)
+        
+def register_user(username, password):
+    # Check if the username is available
+    if not is_username_taken(username):
+        # Create a new user with the given username and password
+        user_data = {"password": password}
+        save_user_data(username, user_data)
+        return True
+    else:
+        return False
+
+def is_username_taken(username):
+    # Check if the username is already taken
+    # For example, check if the user's data file exists
+    return os.path.isfile(f"{username}_data.json")
+
+def authenticate(username, password):
+    # Authenticate the user based on the provided username and password
+    # For example, compare the password with the stored password in the user's data file
+    user_data = load_user_data(username)
+    if user_data and user_data.get("password") == password:
+        return True
+    else:
+        return False
+    
 
 def get_grades(username):
     # Load the user's data
@@ -90,7 +115,6 @@ def get_grades_point_completed_credit(username):
 
     return (sum_grade_point, completed_credit)
 
-
 def get_cgpa(username):
     sum_grade_point = get_grades_point_completed_credit(username)[0]
     completed_credit = get_grades_point_completed_credit(username)[1]
@@ -100,15 +124,23 @@ def get_cgpa(username):
 def main():
     st.title("GPA Calculator")
     st.write("Welcome to the GPA calculator!")
-    
+
     # Get the username and password from the user
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
 
-    # Perform authentication (e.g., check if username and password match)
+    # Check if the user is registering for the first time
+    if not is_username_taken(username):
+        if st.button("Register"):
+            if register_user(username, password):
+                st.success("Registration successful! Please log in.")
+            else:
+                st.error("Username already taken. Please choose a different username.")
+        return
 
-    # If authentication succeeds, continue
+    # Perform authentication (e.g., check if username and password match)
     if authenticate(username, password):
+        # If authentication succeeds, continue
         if st.button("Calculate GPA"):
             get_cgpa(username)
 
