@@ -66,9 +66,11 @@ def register_user(username, password):
     else:
         return False
 
-def is_username_taken(username):
+def is_username_taken(username=None):
     # Check if the username is already taken
     # For example, check if the user's data file exists
+    if username is None:
+        return False
     data = load_user_data(username)
     return bool(data)
 
@@ -138,7 +140,7 @@ def main():
     st.write("Welcome to the GPA calculator!")
 
     # Check if the user is registering for the first time
-    if not is_username_taken(username):
+    if not is_username_taken():
         st.write("Register a new account:")
         new_username = st.text_input("New Username")
         new_password = st.text_input("New Password", type="password")
