@@ -308,7 +308,7 @@ def math_major_complete_condition():
         
    
 
-if __name__ == '__main__':
+'''if __name__ == '__main__':
     print(target_gpa(taken_courses))
     # print(target_gpa(taken_courses))
     
@@ -319,4 +319,4 @@ if __name__ == '__main__':
     
     # print(remaining_cr(taken_courses))
     
-    # print(math_major_complete_condition())
+    # print(math_major_complete_condition())'''
