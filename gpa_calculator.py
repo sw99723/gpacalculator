@@ -132,7 +132,7 @@ def remaining_cr(courses: dict):
     2개의 CR/NCR 중 몇 개 사용했는지/몇 개 남았는지
     """
     total = 2.0
-    used_courses = []
+    used_courses = []  # Define the variable here
 
     for course, course_info in courses.items():
         if course_info == 'CR' or course_info == 'NCR':
