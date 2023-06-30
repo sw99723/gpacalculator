@@ -27,24 +27,27 @@ def input_grades():
     courses = st.text_area("Enter your courses and scores (e.g., MAT135H5: 73, MAT136H5: CR):")
     courses = courses.strip()
     course_list = courses.split(',')
-
+    
     if courses:
         for course in course_list:
             course_info = course.split(':')
-            if len(course_info) == 2:  # Check if the course info is correctly formatted
+            if len(course_info) == 2:
                 course_name = course_info[0].strip()
                 score = course_info[1].strip()
                 if score.isdigit():
                     for grade_value, info in grade_scheme.items():
-                        percentage_range = info["Percentage"]
-                        if int(percentage_range[0]) <= int(score) <= int(percentage_range[1]):
-                            grade_point = info["Grade Point"]
-                            taken_courses[course_name] = (int(score), grade_point)
+                        percentage_range = info.get("Percentage")  # Use .get() method to handle KeyError
+                        if percentage_range:
+                            print(f"Course: {course_name}, Score: {score}, Percentage Range: {percentage_range}")
+                            if int(percentage_range[0]) <= int(score) <= int(percentage_range[1]):
+                                grade_point = info["Grade Point"]
+                                taken_courses[course_name] = (int(score), grade_point)
+                        else:
+                            print(f"Invalid percentage range for grade: {grade_value}")
                 elif score == 'CR' or score == 'NCR':
                     taken_courses[course_name] = (str(score), 0.0)
 
     return taken_courses
-
 
 def get_cgpa(courses):
     """
