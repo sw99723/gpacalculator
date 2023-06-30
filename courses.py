@@ -127,7 +127,7 @@ def remaining_cr(courses: dict):
                 lst.append(course)
     print(f'Remaining Credit/No Credit option is {total} \nYou used for Credit/No Credit option for {lst}' )
     
-def target_gpa(courses: dict):
+'''def target_gpa(courses: dict):
     """
     목표 gpa를 맞추기 위해 몇 점을 받아야 하는지
     """
@@ -151,7 +151,7 @@ def target_gpa(courses: dict):
         total_credits = completed_credit + additional_credit
         goal_grade_point = goal_gpa * goal_credit
         gap = goal_grade_point - 
-    print(gap)
+    print(gap)'''
     
      
 def conflict_course(course_lst1: list, course_lst2: list) -> list:
