@@ -1,5 +1,5 @@
 import streamlit as st
-import json
+from queue import Queue
 
 grade_scheme = {"A+": {"Grade Point": 4.0, "Percentage": (90, 100)},
                 "A": {"Grade Point": 4.0, "Percentage": (85, 89)},
@@ -15,7 +15,15 @@ grade_scheme = {"A+": {"Grade Point": 4.0, "Percentage": (90, 100)},
                 "D-": {"Grade Point": 0.7, "Percentage": (50, 52)},
                 "F": {"Grade Point": 0.0, "Percentage": (0, 49)}}
 
-def input_grades(username):
+# taken_courses 예시
+# ANT102H5: 66, MAT102H5: 56, ANT101H5: 69, CSC108H5: 77, SOC100H5: 53, MAT135H5: 73, MAT136H5: 76, MAT223H5: 68, MAT232H5: 75, STA256H5: 68, RLG203H5: 78
+'''              {'ANT102H5': 66, 'MAT102H5': 56, 'ANT101H5': 69, 'CSC108H5': 77,
+                 'SOC100H5': 53, 'MAT135H5': 73, 'MAT136H5': 76, 'MAT223H5': 68,
+                 'MAT232H5': 75, 'STA256H5': 68, 'RLG203H5': 78}'''
+
+taken_courses = {}
+
+def input_grades():
     st.write("Enter your course information:")
     st.write("Format: Course Name: Score")
     st.write("Example: ANT102H5: 66")
@@ -37,32 +45,27 @@ def input_grades(username):
                 score = courses[1].strip()
                 taken_courses[course_name] = int(score)
 
-    # Save the taken_courses to user's data file
-    save_user_data(username, taken_courses)
-
     return taken_courses
 
-def get_grades(username):
-    # Load the user's data
-    data = load_user_data(username)
-
-    updated_courses = {}
-
-    for course_name, score in data.items():
+def get_grades(courses: dict) -> dict:
+    """
+    현재 가지고 있는 taken_courses를 코스 이름을 키로 하고
+    밸류를 점수와 grade point로 하는 딕셔너리로 바꿈
+    """
+    for course_name, score in courses.items():
         if isinstance(score, int):
             for grade_value, info in grade_scheme.items():
                 percentage_range = info["Percentage"]
                 if int(percentage_range[0]) <= score <= int(percentage_range[1]):
                     grade_point = info["Grade Point"]
-            updated_courses[course_name] = (score, grade_point)
-
-    return updated_courses
+            taken_courses[course_name] = (courses[course_name], grade_point)
+    return taken_courses
 
 def get_grades_point_completed_credit(courses: dict) -> (float, float):
     """
     gpa에 계산되는 grade point와 complete credits 구하기
     """
-    updated_dict = get_grades(courses)
+    updated_dict = get_grades(taken_courses)
     completed_credit = 0.0
     sum_grade_point = 0.0
     for course in updated_dict:
@@ -75,7 +78,8 @@ def get_grades_point_completed_credit(courses: dict) -> (float, float):
             if isinstance(updated_dict[course][1], float):
                 completed_credit += 1.0
                 sum_grade_point += updated_dict[course][1] * 1.0
-    return sum_grade_point, completed_credit  # 튜플로 반환
+    return (sum_grade_point, completed_credit)
+
 
 def get_cgpa(courses: dict):
     """
@@ -83,19 +87,78 @@ def get_cgpa(courses: dict):
 
     Grade Point * Credit (0.5 or 1.0) / Total Credit (Except CR/NCR)
     """
-    courses = get_grades(username)  # 수정: username 대신 courses 전달
+    sum_grade_point = get_grades_point_completed_credit(courses)[0]
+    completed_credit = get_grades_point_completed_credit(courses)[1]
+    current_cgpa = round(sum_grade_point / completed_credit, 2)
+    st.write(f'Current CPGA is {current_cgpa}')
 
-    sum_grade_point, completed_credit = get_grades_point_completed_credit(courses)
 
-    if completed_credit == 0:
-        st.write("No completed credits yet")
-    else:
-        current_cgpa = round(sum_grade_point / completed_credit, 2)
-        st.write(f'Current CGPA is {current_cgpa}')
+def calculate_remaining_credit(courses: dict) -> (float, float):
+    """
+    20개 크레딧 중 몇 크레딧을 더 들어야 하는지
+
+    (remaining credit, completed credit)
+    """
+    completed_credit = 0.0
+    updated = get_grades(courses)
+    for course in updated:
+        if course[6:7] == 'H':
+            if isinstance(updated[course][0], int):
+                if updated[course][0] >= 50:
+                    completed_credit += 0.5
+            elif updated[course] == 'CR':
+                completed_credit += 0.5
+            elif updated[course] == 'NCR':
+                completed_credit += 0.0
+        elif course[6:7] == 'Y':
+            if isinstance(updated[course][0], int):
+                if updated[course][0] >= 50:
+                    completed_credit += 1.0
+            elif updated[course] == 'CR':
+                completed_credit += 1.0
+            elif courses[course] == 'NCR':
+                completed_credit += 0.0
+    remaining_credit = 20.0 - completed_credit
+    return (remaining_credit, completed_credit)
+
+
+def print_calculate_remaining_credit(courses: dict):
+    remaining_credit = calculate_remaining_credit(courses)[0]
+    completed_credit = calculate_remaining_credit(courses)[1]
+    st.write(f'Remaining credit is {remaining_credit} \nComplete credit is {completed_credit}')
+
+
+def remaining_cr(courses: dict):
+    """
+    2개의 CR/NCR 중 몇 개 사용했는지/몇 개 남았는지
+    """
+    total = 2.0
+    lst = []
+    for course in courses:
+        if courses[course] == 'CR' or courses[course] == 'NCR':
+            if course[6:7] == 'H':
+                total -= 0.5
+                lst.append(course)
+            elif course[6:7] == 'Y':
+                total -= 1.0
+                lst.append(course)
+    st.write(f'Remaining Credit/No Credit option is {total} \nYou used for Credit/No Credit option for {lst}')
+
 
 def main():
     st.title("GPA Calculator")
     st.write("Welcome to the GPA calculator!")
+    
+    taken_courses = input_grades()
+    
+    if st.button("Calculate GPA"):
+        get_cgpa(taken_courses)
+
+    if st.button("Calculate Remaining Credit"):
+        print_calculate_remaining_credit(taken_courses)
+
+    if st.button("Calculate Remaining CR/NCR"):
+        remaining_cr(taken_courses)
 
 
 if __name__ == "__main__":
