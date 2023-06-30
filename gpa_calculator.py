@@ -97,23 +97,24 @@ def get_grades(username):
 
     return updated_courses
 
-def get_grades_point_completed_credit(username):
-    updated_courses = get_grades(username)
+def get_grades_point_completed_credit(courses: dict) -> (float, float):
+    """
+    gpa에 계산되는 grade point와 complete credits 구하기
+    """
+    updated_dict = get_grades(courses)
     completed_credit = 0.0
     sum_grade_point = 0.0
-
-    for course, course_info in updated_courses.items():
+    for course in updated_dict:
         period_sign = course[6:7]
         if period_sign == 'H':
-            if isinstance(course_info[1], float):
+            if isinstance(updated_dict[course][1], float):
                 completed_credit += 0.5
-                sum_grade_point += course_info[1] * 0.5
+                sum_grade_point += updated_dict[course][1] * 0.5
         elif period_sign == 'Y':
-            if isinstance(course_info[1], float):
+            if isinstance(updated_dict[course][1], float):
                 completed_credit += 1.0
-                sum_grade_point += course_info[1] * 1.0
-
-    return (sum_grade_point, completed_credit)
+                sum_grade_point += updated_dict[course][1] * 1.0
+    return sum_grade_point, completed_credit  # 튜플로 반환
 
 def get_cgpa(courses: dict):
     """
