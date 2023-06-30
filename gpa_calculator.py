@@ -122,6 +122,8 @@ def get_cgpa(courses: dict):
 
     Grade Point * Credit (0.5 or 1.0) / Total Credit (Except CR/NCR)
     """
+    courses = get_grades(username)  # 수정: username 대신 courses 전달
+
     sum_grade_point, completed_credit = get_grades_point_completed_credit(courses)
 
     if completed_credit == 0:
