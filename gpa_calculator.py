@@ -28,9 +28,33 @@ grade_scheme = {"A+": {"Grade Point": 4.0, "Percentage": (90, 100)},
                 "D-": {"Grade Point": 0.7, "Percentage": (50, 52)},
                 "F": {"Grade Point": 0.0, "Percentage": (0, 49)}}
 
-taken_courses = {'ANT102H5': 66, 'MAT102H5': 56, 'ANT101H5': 69, 'CSC108H5': 77,
+# taken_courses 예시
+'''                {'ANT102H5': 66, 'MAT102H5': 56, 'ANT101H5': 69, 'CSC108H5': 77,
                  'SOC100H5': 53, 'MAT135H5': 73, 'MAT136H5': 76, 'MAT223H5': 68,
-                 'MAT232H5': 75, 'STA256H5': 68, 'RLG203H5': 78}
+                 'MAT232H5': 75, 'STA256H5': 68, 'RLG203H5': 78}'''
+
+taken_courses = {}
+
+def input_grades():
+    st.write("Enter your course information:")
+    st.write("Format: Course Name: Score")
+    st.write("Example: MAT135H5: 73")
+    st.write("Leave a blank line to finish entering grades.")
+
+    course_info = st.text_area("Course Information")
+
+    taken_courses = {}
+
+    course_list = course_info.strip().split('\n')
+
+    for course in course_list:
+        course_info = course.split(':')
+        if len(course_info) == 2:  # Check if the course info is correctly formatted
+            course_name = course_info[0].strip()
+            score = course_info[1].strip()
+            taken_courses[course_name] = int(score)
+
+    return taken_courses
 
 def get_grades(courses: dict) -> dict:
     """
@@ -133,20 +157,13 @@ def remaining_cr(courses: dict):
 def main():
     st.title("GPA Calculator")
     st.write("Welcome to the GPA calculator!")
-    st.write("Enter your course information to calculate your GPA.")
 
-    courses = st.text_area("Enter your courses and scores (e.g., MAT135H5: 73, MAT136H5: 76)")
+    '''courses = st.text_area("Enter your courses and scores (e.g., MAT135H5: 73, MAT136H5: 76)")
     courses = courses.strip()
     course_list = courses.split(',')
-
-    taken_courses = {}
-    for course in course_list:
-        course_info = course.split(':')
-        if len(course_info) == 2:  # Check if the course info is correctly formatted
-            course_name = course_info[0].strip()
-            score = course_info[1].strip()
-            taken_courses[course_name] = int(score)
-
+'''
+    taken_courses = input_grades()
+    
     if st.button("Calculate GPA"):
         get_cgpa(taken_courses)
 
