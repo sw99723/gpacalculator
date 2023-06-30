@@ -22,7 +22,6 @@ grade_scheme = {"A+": {"Grade Point": 4.0, "Percentage": (90, 100)},
 def input_grades():
     st.write("Enter your course information:")
     st.write("Format: Course Name: Score")
-    st.write("Example: ANT102H5: 66")
     st.write("Leave a blank line to finish entering grades.")
 
     courses = st.text_area("Enter your courses and scores (e.g., MAT135H5: 73, MAT136H5: 76)")
