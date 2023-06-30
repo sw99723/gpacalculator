@@ -26,18 +26,22 @@ taken_courses = {}
 def input_grades():
     st.write("Enter your course information:")
     st.write("Format: Course Name: Score")
-    st.write("Example: MAT135H5: 73")
+    st.write("Example: ANT102H5: 66")
+    st.write("Leave a blank line to finish entering grades.")
 
     taken_courses = {}
 
-    course_list = course_info.strip().split('\n')
+    course_info = st.text_area("Course Information")
 
-    for course in course_list:
-        course_info = course.split(':')
-        if len(course_info) == 2:  # Check if the course info is correctly formatted
-            course_name = course_info[0].strip()
-            score = course_info[1].strip()
-            taken_courses[course_name] = int(score)
+    if course_info:
+        course_list = course_info.strip().split('\n')
+
+        for course in course_list:
+            course_info = course.split(':')
+            if len(course_info) == 2:  # Check if the course info is correctly formatted
+                course_name = course_info[0].strip()
+                score = course_info[1].strip()
+                taken_courses[course_name] = int(score)
 
     return taken_courses
 
