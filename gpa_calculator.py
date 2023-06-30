@@ -115,11 +115,19 @@ def get_grades_point_completed_credit(username):
 
     return (sum_grade_point, completed_credit)
 
-def get_cgpa(username):
-    sum_grade_point = get_grades_point_completed_credit(username)[0]
-    completed_credit = get_grades_point_completed_credit(username)[1]
-    current_cgpa = round(sum_grade_point / completed_credit, 2)
-    st.write(f'Current CGPA is {current_cgpa}')
+def get_cgpa(courses: dict):
+    """
+    현재 CGPA 구하기
+
+    Grade Point * Credit (0.5 or 1.0) / Total Credit (Except CR/NCR)
+    """
+    sum_grade_point, completed_credit = get_grades_point_completed_credit(courses)
+
+    if completed_credit == 0:
+        st.write("No completed credits yet")
+    else:
+        current_cgpa = round(sum_grade_point / completed_credit, 2)
+        st.write(f'Current CGPA is {current_cgpa}')
 
 def main():
     st.title("GPA Calculator")
