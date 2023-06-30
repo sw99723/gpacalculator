@@ -162,7 +162,7 @@ def main():
     courses = courses.strip()
     course_list = courses.split(',')
 '''
-    # taken_courses = input_grades()
+    taken_courses = input_grades()
     
     if st.button("Calculate GPA"):
         get_cgpa(taken_courses)
