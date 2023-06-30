@@ -69,7 +69,8 @@ def register_user(username, password):
 def is_username_taken(username):
     # Check if the username is already taken
     # For example, check if the user's data file exists
-    return os.path.isfile(f"{username}_data.json")
+    data = load_user_data(username)
+    return bool(data)
 
 def authenticate(username, password):
     # Authenticate the user based on the provided username and password
@@ -136,18 +137,21 @@ def main():
     st.title("GPA Calculator")
     st.write("Welcome to the GPA calculator!")
 
-    # Get the username and password from the user
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
-
     # Check if the user is registering for the first time
-    if not is_username_taken(username):
+    if not is_username_taken():
+        st.write("Register a new account:")
+        new_username = st.text_input("New Username")
+        new_password = st.text_input("New Password", type="password")
         if st.button("Register"):
-            if register_user(username, password):
+            if register_user(new_username, new_password):
                 st.success("Registration successful! Please log in.")
             else:
                 st.error("Username already taken. Please choose a different username.")
         return
+
+    # Get the username and password from the user
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
 
     # Perform authentication (e.g., check if username and password match)
     if authenticate(username, password):
