@@ -36,7 +36,10 @@ def input_grades():
             if len(course_info) == 2:  # Check if the course info is correctly formatted
                 course_name = course_info[0].strip()
                 score = course_info[1].strip()
-                taken_courses[course_name] = int(score)
+                if type(taken_courses[course_name]) == int:
+                    taken_courses[course_name] = int(score)
+                else:
+                    taken_courses[course_name] = str(score)
 
     return taken_courses
 
