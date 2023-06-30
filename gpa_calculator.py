@@ -138,7 +138,7 @@ def main():
     st.write("Welcome to the GPA calculator!")
 
     # Check if the user is registering for the first time
-    if not is_username_taken():
+    if not is_username_taken(username):
         st.write("Register a new account:")
         new_username = st.text_input("New Username")
         new_password = st.text_input("New Password", type="password")
