@@ -142,9 +142,10 @@ def main():
     taken_courses = {}
     for course in course_list:
         course_info = course.split(':')
-        course_name = course_info[0].strip()
-        score = course_info[1].strip()
-        taken_courses[course_name] = int(score)
+        if len(course_info) == 2:  # Check if the course info is correctly formatted
+            course_name = course_info[0].strip()
+            score = course_info[1].strip()
+            taken_courses[course_name] = int(score)
 
     if st.button("Calculate GPA"):
         get_cgpa(taken_courses)
