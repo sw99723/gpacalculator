@@ -132,16 +132,16 @@ def remaining_cr(courses: dict):
     2개의 CR/NCR 중 몇 개 사용했는지/몇 개 남았는지
     """
     total = 2.0
-    used_courses = []  # Define the variable here
+    used_courses = []
 
     for course, course_info in courses.items():
         if course_info == 'CR' or course_info == 'NCR':
             if course[6:7] == 'H':
                 total -= 0.5
-                used_courses.append(course)
+                used_courses.append(course)  # 값을 추가하는 부분이 추가되었습니다.
             elif course[6:7] == 'Y':
                 total -= 1.0
-                used_courses.append(course)
+                used_courses.append(course)  # 값을 추가하는 부분이 추가되었습니다.
 
     st.write(f'Remaining Credit/No Credit option is {total} \nYou used Credit/No Credit option for {used_courses}')
 
